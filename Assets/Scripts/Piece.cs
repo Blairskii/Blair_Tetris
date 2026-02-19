@@ -191,7 +191,7 @@ public class Piece : MonoBehaviour
         // Create new rotation variable
         Quaternion rotation = Quaternion.Euler(0, 0, 90 * direction);
 
-        bool isSpecial = data.tetronimo == Tetronimo.I || data.tetronimo == Tetronimo.O;
+        bool isSpecial = data.tetronimo == Tetronimo.I || data.tetronimo == Tetronimo.O || data.tetronimo == Tetronimo.Custom;
         // Loop through all cell positions 
         for (int i = 0; i < cells.Length; i++)
         {
