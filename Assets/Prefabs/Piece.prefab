@@ -51,3 +51,6 @@ MonoBehaviour:
   board: {fileID: 0}
   cells: []
   position: {x: 0, y: 0}
+  moveClip: {fileID: 8300000, guid: bf818f3a4e967b54dbc4e8807facf69b, type: 3}
+  rotateClip: {fileID: 8300000, guid: 03d7bc1908e571547b9f0ccd8e815b25, type: 3}
+  dropClip: {fileID: 8300000, guid: 8d3b2237d2dfc6041839a1717ed3e7ab, type: 3}

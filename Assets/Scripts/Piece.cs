@@ -11,8 +11,23 @@ public class Piece : MonoBehaviour
 
     public Vector2Int position;
 
+    // Audio
+    public AudioClip moveClip;
+    public AudioClip rotateClip;
+    public AudioClip dropClip;
+    AudioSource audioSource;
+
     // Freeze bool for preventing piece manipulation
     bool freeze = false;
+
+    void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+    }
 
     // Initializes cell data for a given shape
     public void Initialize(Board board, Tetronimo tetronimo)
@@ -60,17 +75,26 @@ public class Piece : MonoBehaviour
             // Left / Right movement
             if (Input.GetKeyDown(KeyCode.A))
             {
-                Move(Vector2Int.left);
+                if (Move(Vector2Int.left))
+                {
+                    PlayOneShotSafe(moveClip);
+                }
             }
             else if (Input.GetKeyDown(KeyCode.D))
             {
-                Move(Vector2Int.right);
+                if (Move(Vector2Int.right))
+                {
+                    PlayOneShotSafe(moveClip);
+                }
             }
 
             // Downward movement
             if (Input.GetKeyDown(KeyCode.S))
             {
-                Move(Vector2Int.down);
+                if (Move(Vector2Int.down))
+                {
+                    PlayOneShotSafe(moveClip);
+                }
             }
 
             // Left / Right Rotation
@@ -108,6 +132,9 @@ public class Piece : MonoBehaviour
 
     void HardDrop()
     {
+        // Play one-shot for hard drop once
+        PlayOneShotSafe(dropClip);
+
         // Algorithm: repeatedly move down until we cant
         while(Move(Vector2Int.down))
         {
@@ -130,6 +157,8 @@ public class Piece : MonoBehaviour
 
         ApplyRotation(direction);
 
+        bool rotationSucceeded = false;
+
         // Check position after rotation
         if (!board.IsPositionValid(this, position))
         {
@@ -141,12 +170,19 @@ public class Piece : MonoBehaviour
             }
             else
             {
+                rotationSucceeded = true;
                 Debug.Log("Wall kick succeeded");
             }
         }
         else
         {
+            rotationSucceeded = true;
             Debug.Log("Rotation successful");
+        }
+
+        if (rotationSucceeded)
+        {
+            PlayOneShotSafe(rotateClip);
         }
     }
 
@@ -242,5 +278,13 @@ public class Piece : MonoBehaviour
 
         // Return true or false
         return positionValid;
+    }
+
+    void PlayOneShotSafe(AudioClip clip)
+    {
+        if (audioSource != null && clip != null)
+        {
+            audioSource.PlayOneShot(clip);
+        }
     }
 }
