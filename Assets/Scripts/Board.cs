@@ -54,10 +54,42 @@ public class Board : MonoBehaviour
 
         // Initialize and set new tetronimo piece
         activePiece.Initialize(this, t);
+
+        CheckEndGame();
+
         Set(activePiece);
     }
+    void CheckEndGame()
+    {
+        if (!IsPositionValid(activePiece, activePiece.position))
+        {
+         //if no valid position gameover
+            tetrisManager.SetGameOver(true);
+        } 
+    }
+    public void UpdateGameOver()
+    {
+        if (!tetrisManager.GameOver)
+        {
+            ResetBoard();
+        }
+    }
 
-    public void Clear(Piece piece)
+    void ResetBoard()
+    {
+       Piece[] foundPieces = FindObjectsByType<Piece>(FindObjectsSortMode.None);
+
+        foreach (Piece piece in foundPieces)Destroy(piece.gameObject);
+
+        activePiece = null;
+
+        tilemap.ClearAllTiles();
+
+        SpawnPiece();
+
+    }
+
+ public void Clear(Piece piece)
     {
         // Loop through all tetronimo cells and set tiles to null
         for (int i = 0; i < piece.cells.Length; i++)
